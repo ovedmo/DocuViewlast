@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Client\DocuViewareBlazor.Client.csproj" />
+    <ProjectReference Include="..\Shared\DocuViewareBlazor.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GdPicture.NET.14.WEB.DocuVieware.Core">
+      <HintPath>lib\GdPicture.NET.14.WEB.DocuVieware.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GdPicture.NET.14.barcode.1d.reader.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.barcode.2d.reader.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.document.analyzer.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.filters.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.image.gdimgplug.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.Imaging.Rendering.Skia.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.ocr.tesseract.3.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.omr.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="GdPicture.NET.14.twain.client.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+</Project>

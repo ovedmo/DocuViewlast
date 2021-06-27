@@ -1,0 +1,97 @@
+﻿@page "/"
+@inject HttpClient Client
+@inject IJSRuntime Runtime
+@inject SessionService Service
+
+@using DocuViewareBlazor.Shared
+@using System.Net.Http;
+
+<div class="row" style="height: 100%;">
+    <div class="col-lg-2">
+        <h2>Pages</h2>
+        <ul>
+            @for (var page = 1; page <= PageCount; page++)
+            {
+                <li style="color: green" onclick="docuViewareInterop.SelectPage('@docuViewareID', @(page));"><a href="#">@($"Page {page}")</a></li>
+            }
+        </ul>
+        <h2>Events</h2>
+        <ul>
+            @foreach (var msg in EventMessages)
+            {
+                <li>@msg</li>
+            }
+        </ul>
+    </div>
+    <div class="col-lg-10">
+        <div @ref="docuDiv" style="width:100%;height:100%;"></div>
+    </div>
+</div>
+
+@code {
+
+    ElementReference docuDiv;
+    private static int PageCount;
+    private string docuViewareID;
+    private DotNetObjectReference<Index> objRef;
+    private List<string> EventMessages = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        objRef = DotNetObjectReference.Create(this);
+        docuViewareID = $"DocuVieware{Service.Key}";
+        var docuViewareConfig = new DocuViewareConfiguration
+        {
+            SessionId = Service.SessionId,
+            ControlId = docuViewareID,
+            AllowPrint = true,
+            EnablePrintButton = true,
+            AllowUpload = true,
+            EnableFileUploadButton = true,
+            CollapsedSnapIn = true,
+            ShowAnnotationsSnapIn = true,
+            EnableRotateButtons = true,
+            EnableZoomButtons = true,
+            EnablePageViewButtons = true,
+            EnableMultipleThumbnailSelection = true,
+            EnableMouseModeButtons = true,
+            EnableFormFieldsEdition = true,
+            EnableTwainAcquisitionButton = true
+        };
+        var response = await Client.PostAsJsonAsync("api/DocuViewareREST/GetDocuViewareControl", docuViewareConfig);
+        var responseContent = await response.Content.ReadFromJsonAsync<DocuViewareRESTOutputResponse>();
+        await Runtime.InvokeVoidAsync("docuViewareShim.loadControl",
+            new[]
+            {
+                    (object)docuDiv, (object)responseContent.HtmlContent
+                                                                });
+        await Runtime.InvokeVoidAsync("docuViewareInterop.RegisterCustomEvent", docuViewareID, objRef);
+    }
+
+    private async Task SelectPage(int pageNo)
+    {
+        await Runtime.InvokeVoidAsync("docuViewareInterop.SelectPage", docuViewareID, pageNo);
+    }
+
+    [JSInvokable]
+    public void DocuViewareDocumentOnLoaded(int pageCount, int currentPage)
+    {
+        PageCount = pageCount;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void RegisterOnPageChanged(int currentPage)
+    {
+        EventMessages.Insert(0, $"Changed to page {currentPage}");
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void RegisterOnAreaSelected(double left, double top, double width, double height)
+    {
+        EventMessages.Insert(0, $"Selected area is left: {left}, top: {top}, width: {width}, height: {height}");
+        StateHasChanged();
+    }
+    
+}
