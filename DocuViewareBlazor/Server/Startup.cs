@@ -34,7 +34,7 @@ namespace DocuViewareBlazor.Server
             DocuViewareLicensing.RegisterKEY("0404403347189896460401864");
             DocuViewareManager.SetupConfiguration(true, DocuViewareSessionStateMode.InProc,
                 path + "\\Cache",
-                "https://localhost:44393/", "api/DocuViewareREST");
+                "https://localhost:44393/", "api/DocuViewareREST"); 
 
             DocuViewareEventsHandler.PageTransferReady += DocuViewareEventDispatcher.PageTransferReady;
             DocuViewareEventsHandler.NewDocumentLoaded += DocuViewareEventDispatcher.NewDocumentLoaded;
